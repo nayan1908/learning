@@ -1,13 +1,11 @@
 const path = require('path');
+const { PORT, DATABASE_USER, DATABASE_PASSWORD } = require('./util/config');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const mongoose = require("mongoose");
 const errorController = require('./controllers/error');
 
-const { mongoConnect } = require("./util/database");
-
-// const sequelize = require('./util/database');
 // const Product = require('./models/product');
 const User = require('./models/user');
 // const Order = require('./models/order');
@@ -21,6 +19,7 @@ app.set('views', 'views');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -39,17 +38,10 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
-  
 
-  // if(!user){
-  //   const user = new User("nayan.ramani", "nayan@gmil.com");
-  //   user.save().then(user => {
-  //     console.log("app.js user", user);
-  //   }).catch(err => {
-  //     console.log(err)
-  //   });
-  // }
 
-  app.listen(3000);
-})
+mongoose.connect(`mongodb+srv://${DATABASE_USER}:${DATABASE_PASSWORD}@cluster0.gfcuwq7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`).then(() => {
+  app.listen(PORT);
+}).catch(err => {
+  console.log(err);
+});
