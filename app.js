@@ -44,7 +44,7 @@ app.use((req, res, next) => {
   User.findById(req.session.user._id)
   .then(user => {
     req.user = user;
-    next();
+  next();
   }).catch(err => console.log(err));
 })
 
@@ -56,20 +56,6 @@ app.use(errorController.get404);
 
 mongoose.connect(MONGODB_URI)
   .then((result) => {
-
-    User.findOne().then(user => {
-      if (!user) {
-        const user = new User({
-          name: "nayan",
-          email: "nayan@gmail.com",
-          cart: {
-            items: []
-          }
-        });
-        user.save();
-      }
-    })
-
     app.listen(PORT);
   }).catch(err => {
     console.log("Connection err ", err);
