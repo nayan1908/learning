@@ -7,7 +7,7 @@ const User = require("../models/user");
 
 router.get('/login', authController.getLogin);
 router.post('/login',
-    check('email', "Please enter valid email").isEmail()
+    check('email', "Please enter valid email").isEmail().normalizeEmail()
         .custom((value, { req }) => {
             return User.findOne({ email: value }).then(user => {
                 if (!user) {
@@ -21,7 +21,7 @@ router.post('/login',
 router.get('/signup', authController.getSignup);
 router.post('/signup',
     [
-        check('email').isEmail()
+        check('email').isEmail().normalizeEmail()
             .withMessage('Please enter valid email')
             .custom((value, { req }) => {
                 // if (value === "test@test.com") {
@@ -37,8 +37,9 @@ router.post('/signup',
             }),
         body('password', "Please enter a password with only number and text and at least 5 characters.")
             .isLength({ min: 5 })
-            .isAlphanumeric(),
-        body('confirmPassword').custom((value, { req }) => {
+            .isAlphanumeric()
+            .trim(),
+        body('confirmPassword').trim().custom((value, { req }) => {
             if (value !== req.body.password) {
                 throw new Error("Password have to match");
             }
