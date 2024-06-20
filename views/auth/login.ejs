@@ -16,14 +16,14 @@
                     <div class="form-control">
                         <label for="email">Email</label>
                         <input
-                        class="<%= validationErrors.find(e => e.path === 'email') ? 'invliad' : '' %>"
-                        type="email" name="email" id="email">
+                        class="<%= validationErrors.find(e => e.path === 'email') ? 'invalid' : '' %>"
+                        type="email" name="email" id="email" value="<%= oldInput.email %>">
                     </div>
                     <div class="form-control">
                         <label for="password">Password</label>
                         <input
-                        class="<%= validationErrors.find(e => e.path === 'password') ? 'invliad' : '' %>"
-                        type="password" name="password" id="password" >
+                        class="<%= validationErrors.find(e => e.path === 'password') ? 'invalid' : '' %>"
+                        type="password" name="password" id="password" value="<%= oldInput.password %>">
                     </div>
 
                     <button class="btn" type="submit">

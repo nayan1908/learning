@@ -14,7 +14,8 @@ exports.getLogin = (req, res, next) => {
         path: '/login',
         pageTitle: 'Login',
         errorMessage: message,
-        validationErrors: []
+        validationErrors: [],
+        oldInput: { email : "", password: "" }
     });
 };
 
@@ -23,7 +24,7 @@ exports.postLogin = (req, res, next) => {
     const password = req.body.password;
 
     const errors = validationResult(req);
-    if(!errors.isEmpty()){
+    if (!errors.isEmpty()) {
         return res.status(422).render("auth/login", {
             path: "/login",
             pageTitle: "Login",
@@ -42,10 +43,14 @@ exports.postLogin = (req, res, next) => {
             })
             // res.setHeader('Set-Cookie', 'loggedIn=true');
         }
-        req.flash("error", "Invalid Password");
-        res.redirect("/login");
+        return res.status(422).render("auth/login", {
+            path: "/login",
+            pageTitle: "Login",
+            errorMessage: "Invalid Password",
+            validationErrors: [],
+            oldInput: { email, password }
+        });
     })
-
 }
 
 exports.getSignup = (req, res, next) => {
@@ -64,7 +69,7 @@ exports.getSignup = (req, res, next) => {
             password: "",
             confirmPassword: ""
         },
-        validationErrors : []
+        validationErrors: []
     });
 };
 
@@ -80,8 +85,8 @@ exports.postSignup = (req, res, next) => {
             path: '/signup',
             pageTitle: 'Signup',
             errorMessage: errors.array()[0].msg,
-            oldInput : {
-                email : email,
+            oldInput: {
+                email: email,
                 password: password,
                 confirmPassword: confirmPassword
             },
