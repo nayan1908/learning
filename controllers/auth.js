@@ -15,7 +15,7 @@ exports.getLogin = (req, res, next) => {
         pageTitle: 'Login',
         errorMessage: message,
         validationErrors: [],
-        oldInput: { email : "", password: "" }
+        oldInput: { email: "", password: "" }
     });
 };
 
@@ -35,10 +35,10 @@ exports.postLogin = (req, res, next) => {
 
     bcrypt.compare(password, req.user.password).then(doMatch => {
         if (doMatch) {
+            console.log("PASSWORD MATCHED")
             req.session.user = req.user;
             req.session.isLoggedIn = true;
             return req.session.save(err => {
-                console.log(err);
                 res.redirect("/");
             })
             // res.setHeader('Set-Cookie', 'loggedIn=true');
@@ -112,7 +112,11 @@ exports.postSignup = (req, res, next) => {
             });
     }).then(result => {
         res.redirect("/login");
-    }).catch(err => console.log(err))
+    }).catch(err => {
+        const error = new Error(err);
+        err.httpStatusCode = 500;
+        return next(error);
+    });
 };
 
 exports.postLogout = (req, res, next) => {

@@ -1,7 +1,9 @@
 # MongoDB CRUD Project
 
 ## Overview
-This project demonstrates basic CRUD (Create, Read, Update, Delete) operations using MongoDB. It includes static user IDs, cart data management, and utilizes Node.js, Express.js, MongoDB, and Pug (formerly known as Jade) for templating.
+This project demonstrates signup user, cart data management and utilizes Node.js, Express.js, MongoDB, and Pug (formerly known as Jade) for templating.
+
+Error handling dynamically.
 
 ## Prerequisites
 Before running the project, ensure you have the following installed:
