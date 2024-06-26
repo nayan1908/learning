@@ -1,7 +1,12 @@
+const fs = require('fs');
 const multer = require("multer");
 
 const fileStorage = multer.diskStorage({
-    destination: function (req, file, cb)  {
+    destination: function (req, file, cb) {
+
+        if (!fs.existsSync('images')) {
+            fs.mkdirSync('images', { recursive: true });
+        }
         cb(null, 'images');
     },
     filename: function (req, file, cb) {
@@ -22,4 +27,12 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-module.exports = { fileFilter, fileStorage };
+const deleteFile = (filePath) => {
+    if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, err => {
+            if(err) throw (err);
+        });
+    }
+}
+
+module.exports = { fileFilter, fileStorage, deleteFile };
