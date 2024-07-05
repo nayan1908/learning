@@ -6,6 +6,7 @@ const Order = require('../models/order');
 const { populate } = require('../models/user');
 const PDFDocument = require('pdfkit');
 const { ITEMS_PER_PAGE } = require("../util/pagination");
+const product = require('../models/product');
 
 exports.getProducts = (req, res, next) => {
   const page = +req.query.page || 1;
@@ -147,6 +148,30 @@ exports.postCart = (req, res, next) => {
   //     res.redirect('/cart');
   //   })
   //   .catch(err => console.log(err));
+};
+
+exports.getCheckout = (req, res, next) => {
+  req.user
+    .populate('cart.items.productId')
+    .then(user => {
+      const products = user.cart.items;
+      let totalAmount = 0;
+      products.forEach(item => {
+        totalAmount += item.quantity * item.productId.price;
+      });
+      
+      res.render('shop/cart', {
+        path: '/checkout',
+        pageTitle: 'Checkout',
+        products: products,
+        totalSum: totalAmount
+      });
+    })
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
